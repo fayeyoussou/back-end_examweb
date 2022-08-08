@@ -7,14 +7,15 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class RegisterController extends BaseController
+class UserController extends BaseController
 {
     /**
-     * Register api
+     * Store a newly created resource in storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function register(Request $request)
+    public function store (Request $request)
     {
         $validator = Validator::make($request->all(), [
             'prenom' => 'required|min:3|max:60',

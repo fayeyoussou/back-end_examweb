@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\ProduitController;
 
-use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,15 +21,18 @@ use App\Http\Controllers\RegisterController;
 */
 
 
-Route::controller(RegisterController::class)->group(function(){
-    Route::post('register', 'register')->name('register');
+Route::controller(UserController::class)->group(function(){
+    // Route::post('register', 'register')->middleware('auth:sanctum')->name('register');
     Route::post('login', 'login')->name('login');
-    Route::post('logout','logout')->name('logout');
+    Route::post('logout','logout')->middleware('auth:sanctum')->name('logout');
+
 });
 
 Route::middleware('auth:sanctum')->group( function () {
     Route::resource('categorie', CategorieController::class);
     Route::resource('produit', ProduitController::class);
+    Route::resource('role', RoleController::class);
+    Route::resource('user',UserController::class);
 
 });
 

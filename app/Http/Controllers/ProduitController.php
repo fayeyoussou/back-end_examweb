@@ -18,7 +18,8 @@ class ProduitController extends BaseController
      */
     public function index () {
         try {
-            $produit = Produit::all()->where('etat','=',1);
+            $produit = Produit::where('etat','=',1)-> orderBy('libelle', 'asc')
+            -> get();
             return $this->sendResponse(ProduitResource::collection($produit),'produit retrieved successfully');
         } catch (\Throwable $th) {
             return $this->sendError('Error',$th->getMessage());
