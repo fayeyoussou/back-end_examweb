@@ -17,8 +17,8 @@ class CategorieController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function index () {
-        $product = Categorie::all();
-        return $this->sendResponse(CategorieResource::collection($product),'product retrieved successfully');
+        $categorie = Categorie::all();
+        return $this->sendResponse(CategorieResource::collection($categorie),'categorie retrieved successfully');
     }
     /**
      * Store a newly created resource in storage.
@@ -29,15 +29,20 @@ class CategorieController extends BaseController
     public function store (Request $request){
         $input = $request->all();
         $validator = Validator::make($input,[
-            'nom'=> 'required|min:6|max:60'
+            'nom'=> 'required|min:3|max:60'
         ]);
-        $request->user()->currentAccessToken()->delete();
-        return $this->sendResponse($request->user()->id,'user');
+
+        // $request->user()->currentAccessToken()->delete();
+        // return $this->sendResponse($request->user()->id,'user');
         if($validator->fails()){
             return $this->sendError('Validator error.',$validator->errors());
         }
+        $input["nom"] =ucwords (strtolower( $input["nom"]));
         $categorie = Categorie::create($input);
-        return $this->sendResponse(new CategorieResource($categorie),'Categorie created successfully');
+        return $this->sendResponse(
+            $input["nom"],
+            new CategorieResource($categorie),
+            'Categorie created successfully');
     }
      /**
      * Display the specified resource.
@@ -47,7 +52,7 @@ class CategorieController extends BaseController
      */
     public function show ($id) {
         $categorie = Categorie::find($id);
-        if(isNull($categorie)) return $this->sendError('Product not found');
+        if($categorie ==null) return $this->sendError("aucun categorie avec l'id $id trouve");
         return $this->sendResponse(new CategorieResource($categorie),'Categorie retrieved successfully');
     }
     /**
@@ -57,21 +62,23 @@ class CategorieController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Categorie $categorie)
+    public function update(Request $request, $id)
     {
+        $categorie = Categorie::Find($id);
+        if($categorie ==null) return $this->sendError("aucun categorie avec l'id $id trouve");
         $input = $request->all();
         $validator = Validator::make($input, [
-            'nom' => 'required|min:6|max:60',
+            'nom' => 'required|min:3|max:60',
         ]);
 
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());
         }
-
-        $categorie->nom = $input['nom'];
+        $categorie->nom =ucwords (strtolower( $input["nom"]));
+        ;
         $categorie->update();
 
-        return $this->sendResponse(new CategorieResource($categorie), 'categorie updated successfully.');
+        return $this->sendResponse(new CategorieResource($categorie), 'Categorie mise a jour.');
     }
     /**
      * Remove the specified resource from storage.
@@ -83,6 +90,6 @@ class CategorieController extends BaseController
     {
         $categorie->delete();
 
-        return $this->sendResponse([], 'Product deleted successfully.');
+        return $this->sendResponse([], 'Categorie supprimée.');
     }
 }
