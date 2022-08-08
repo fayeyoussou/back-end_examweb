@@ -22,7 +22,8 @@ use App\Http\Controllers\RoleController;
 
 
 Route::controller(UserController::class)->group(function(){
-    // Route::post('register', 'register')->middleware('auth:sanctum')->name('register');
+    Route::post('register', 'store')
+    ->name('register');
     Route::post('login', 'login')->name('login');
     Route::post('logout','logout')->middleware('auth:sanctum')->name('logout');
 

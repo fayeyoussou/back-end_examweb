@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Categorie;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CategorieResource extends JsonResource
@@ -15,15 +16,16 @@ class CategorieResource extends JsonResource
     public function toArray($request)
     {
         $produits = [];
-        foreach ($this->produits() as $produit) {
-            $produits[]=$produit->libelle;
+        foreach ($this->produits()->get() as $produit) {
+            $produits[] = $produit->libelle;
         }
+        // $categorie = Categorie::find($this->id);
         return [
             'id' => $this->id,
             'nom' => $this->nom,
             'produits'=> $produits,
-            'created_at' => $this->created_at->format('d/m/Y'),
-            'updated_at' => $this->updated_at->format('d/m/Y'),
+            // 'created_at' => $this->created_at->format('d/m/Y'),
+            // 'updated_at' => $this->updated_at->format('d/m/Y'),
         ];
     }
 }
