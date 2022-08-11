@@ -15,13 +15,14 @@ class ProduitResource extends JsonResource
     public function toArray($request)
     {
         // $produits = [];
-        $users = $this->user()->get();
+        $users = $this->user()->get()[0];
+        $categorie = $this->categorie()->get()[0];
         return [
             'id' => $this->id,
             'libelle' => $this->libelle,
             'stock'=>$this->stock,
-            'categorie'=> $this->categorie()->get(),
-            'user'=>$users,
+            'categorie'=> ['id'=>$categorie->id,'nom'=>$categorie->nom],
+            'user'=>['id'=>$users->id,'nom'=>$users->prenom." ".$users->nom],
             // 'created_at' => $this->created_at->format('d/m/Y'),
             // 'updated_at' => $this->updated_at->format('d/m/Y'),
         ];

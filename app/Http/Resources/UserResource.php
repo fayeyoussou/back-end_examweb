@@ -17,7 +17,7 @@ class UserResource extends JsonResource
     {
         $roles = [];
         foreach ($this->roles()->get() as $role) {
-            $roles[] = $role->nom;
+            $roles[] = ['id'=>$role->id,'nom'=>$role->nom];
         }
         return [
             'id' => $this->id,

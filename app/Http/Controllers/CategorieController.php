@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CategorieResource;
+use App\Http\Resources\ProduitResource;
 use Illuminate\Http\Request;
 use App\Models\Categorie;
+use App\Models\Produit;
 use Illuminate\Support\Facades\Validator;
 
 use function PHPUnit\Framework\isNull;
@@ -91,5 +93,13 @@ class CategorieController extends BaseController
         $categorie->delete();
 
         return $this->sendResponse([], 'Categorie supprimée.');
+    }
+
+    public function showProduits($id){
+        $categorie = Categorie::find($id);
+        if ($categorie == null) $this->sendError('Introuvable',['message'=>'categorie non trouve']);
+
+        $produits = Produit::where('etat', '=','1')->where('categorie_id','=',$id)->get();
+        return $this->sendResponse(ProduitResource::collection($produits),'Liste des produits');
     }
 }

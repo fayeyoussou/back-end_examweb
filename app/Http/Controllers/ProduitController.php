@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MouvementResource;
 use App\Http\Resources\ProduitResource;
 use App\Models\Categorie;
+use App\Models\Mouvement;
 use App\Models\Produit;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -121,5 +123,13 @@ class ProduitController extends BaseController
         $produit->etat = 0;
         $produit->update();
         return $this->sendResponse([], 'Categorie supprimée.');
+    }
+    public function showEntree($id){
+        $entree = Mouvement::where('etat','=','1')->where('produit_id','=',$id)->where('type_id','=','1')->get();
+        return $this->sendResponse(MouvementResource::collection($entree),'liste entrees');
+    }
+    public function showSortie($id){
+        $entree = Mouvement::where('etat','=','1')->where('produit_id','=',$id)->where('type_id','=','2')->get();
+        return $this->sendResponse(MouvementResource::collection($entree),'liste entrees');
     }
 }

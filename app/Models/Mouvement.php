@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Mouvement extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'type_id',
+        'date_mouvement',
+        'produit_id',
+        'quantite',
+        'prix',
+        'etat'
+    ];
     public function produit () {
         return $this->belongsTo(Produit::class);
     }

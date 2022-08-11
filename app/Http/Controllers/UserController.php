@@ -37,6 +37,7 @@ class UserController extends BaseController
             'prenom' => 'required|min:3|max:60',
             'nom' => 'required|min:3|max:60',
             'email' => 'required|email',
+            'roles'=>'required|array|min:1'
 
         ]);
 
@@ -47,11 +48,14 @@ class UserController extends BaseController
         $input = $request->all();
         $input['password'] = bcrypt('passer123');
         $user = User::create($input);
+        foreach ($input['roles'] as $role) {
+            $user->roles()->attach($role);
+        }
         // $success['token'] =  $user->createToken('MyApp')->plainTextToken;
 
         $user;
 
-        return $this->sendResponse($user, 'User added successfully.');
+        return $this->sendResponse(new UserResource($user), 'User added successfully.');
     }
 
     /**
@@ -116,7 +120,11 @@ class UserController extends BaseController
             $user = Auth::user()->getAuthIdentifier();
             $user = User::find($user);
             if($user->etat == 0) return $this->sendError('Unauthorized.',['error'=>"cette utilisateur n'a plus de droit d'acces"]);
-            $success['token'] =  $user->createToken('MyApp')->plainTextToken;
+            $roles = [];
+            foreach ($user->roles()->get() as $role) {
+                $roles[] = $role->nom;
+            }
+            $success['token'] =  $user->createToken('MyApp',$roles)->plainTextToken;
             $success['nom'] =  $user->prenom." ".$user->nom;
             $success['email'] = $user->email;
 

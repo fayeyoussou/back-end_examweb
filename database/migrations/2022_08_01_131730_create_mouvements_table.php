@@ -19,7 +19,8 @@ return new class extends Migration
             $table->integer('quantite');
             $table->integer('prix');
             $table->foreignId('produit_id')->constrained('produits')->restrictOnDelete();
-            $table->tinyInteger('etat',false,true);
+            $table->foreignId('type_id')->constrained('types')->restrictOnDelete();
+            $table->tinyInteger('etat',false,true)->default('1');
             $table->timestamps();
         });
     }

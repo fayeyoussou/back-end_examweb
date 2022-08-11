@@ -14,10 +14,15 @@ class RoleResource extends JsonResource
      */
     public function toArray($request)
     {
+        $users = [];
+        foreach ($this->users()->get() as $user) {
+            $users[]=['id'=>$user->id,'nom'=>$user->prenom." ".$user->nom];
+        }
 
         return [
             'id' => $this->id,
             'nom' => $this->nom,
+            'user'=>$users
         ];
     }
 }

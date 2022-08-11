@@ -17,7 +17,7 @@ class CategorieResource extends JsonResource
     {
         $produits = [];
         foreach ($this->produits()->get() as $produit) {
-            $produits[] = $produit->libelle;
+            $produits[] = ['id'=>$produit->id,'libelle'=>$produit->libelle];
         }
         // $categorie = Categorie::find($this->id);
         return [
